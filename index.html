@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Death Note</title>
+    <link rel="stylesheet" type="text/css" href="index.css">
+    <style>
+        /* Basic styling for the container */
+        .container {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            display: none; /* Hidden by default */
+            color:white;
+            font-size:25px;
+        }
+
+        /* Fading animation */
+        .fade {
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+        }
+
+        .fade-in {
+            opacity: 1;
+        }
+
+        .fade-out {
+            opacity: 0;
+        }
+    </style>
+    <script>
+        // Function to get a cookie by name
+        function getCookie(name) {
+            let nameEQ = name + "=";
+            let ca = document.cookie.split(';');
+            for (let i = 0; i < ca.length; i++) {
+                let c = ca[i];
+                while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+                if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+            }
+            return null;
+        }
+
+        // Function to set a cookie
+        function setCookie(name, value, days) {
+            let expires = "";
+            if (days) {
+                const date = new Date();
+                date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+                expires = "; expires=" + date.toUTCString();
+            }
+            document.cookie = name + "=" + (value || "") + expires + "; path=/";
+        }
+
+        // Check if the cookie exists and redirect
+        function checkCookie() {
+            let username = getCookie("username");
+            if (username) {
+                // If cookie exists, redirect to home.html
+                window.location.href = "home.html";
+            }
+        }
+
+        // Fading text display
+        function displayFadingTexts() {
+        	let username = getCookie("username");
+            const messages = [
+
+                "Welcome to the Death Note, " + username +".",
+                "The idea of death is scary.. But",
+                "Don't fear for we are with you!"
+            ];
+
+            const container = document.getElementById("message-container");
+            container.style.display = "block"; // Show the container
+
+            let index = 0;
+
+            function showNextMessage() {
+                if (index < messages.length) {
+                    const messageDiv = document.getElementById("message");
+                    messageDiv.textContent = messages[index];
+                    messageDiv.classList.add("fade-in");
+                    setTimeout(() => {
+                        messageDiv.classList.remove("fade-in");
+                        messageDiv.classList.add("fade-out");
+                        setTimeout(() => {
+                            messageDiv.classList.remove("fade-out");
+                            index++;
+                            showNextMessage();
+                        }, 1000); // Wait for fade-out duration
+                    }, 2000); // Display each message for 2 seconds
+                } else {
+                    setTimeout(() => {
+                        window.location.href = "home.html"; // Redirect after all messages
+                    }, 1000); // Wait before redirecting
+                }
+            }
+
+            showNextMessage();
+        }
+
+        // Handle form submission
+        function handleFormSubmission(event) {
+            event.preventDefault(); // Prevent form from submitting
+            const username = document.forms["search"]["txt"].value;
+            if (username) {
+                setCookie("username", username, 7); // Save the username as a cookie for 7 days
+                document.querySelector('.box').style.display = 'none'; // Hide the input box
+                displayFadingTexts(); // Start displaying messages
+            }
+        }
+
+        // Run cookie check on page load
+        window.onload = checkCookie;
+    </script>
+</head>
+<body>
+    <div class="box">
+        <form name="search" onsubmit="handleFormSubmission(event)">
+            <input type="text" placeholder="        Enter your name" class="input" name="txt" onmouseout="this.value = ''; this.blur();">
+        </form>
+        <i class="fas fa-search"></i>
+    </div>
+
+    <!-- Container for fading messages -->
+    <div id="message-container" class="container">
+        <div id="message" class="fade"></div>
+    </div>
+
+ 
+</body>
+</html>
