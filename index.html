@@ -70,7 +70,7 @@
         	let username = getCookie("username");
             const messages = [
 
-                "Welcome to the Death Note, " + username +".",
+                "Welcome to the Death Note, " + "Naitik Mundra" +".",
                 "The idea of death is scary.. But",
                 "Don't fear for we are with you!"
             ];
@@ -122,7 +122,7 @@
 <body>
     <div class="box">
         <form name="search" onsubmit="handleFormSubmission(event)">
-            <input type="text" placeholder="        Enter your name" class="input" name="txt" onmouseout="this.value = ''; this.blur();">
+            <input type="text" autocomplete="no"  placeholder="        Enter your name" class="input" name="txt" onmouseout="this.value = ''; this.blur();">
         </form>
         <i class="fas fa-search"></i>
     </div>
